@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symulator MOV i XCHG</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="registers">
+            <div class="register">
+                <label for="ax">AX:</label>
+                <input type="text" id="ax" placeholder="0000">
+            </div>
+            <div class="register">
+                <label for="bx">BX:</label>
+                <input type="text" id="bx" placeholder="0000">
+            </div>
+            <div class="register">
+                <label for="cx">CX:</label>
+                <input type="text" id="cx" placeholder="0000">
+            </div>
+            <div class="register">
+                <label for="dx">DX:</label>
+                <input type="text" id="dx" placeholder="0000">
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button onclick="randomValues()">RANDOM</button>
+            <button onclick="clearRegisters()">CLEAR</button>
+        </div>
+
+        <div class="actions">
+            <button onclick="movSelected()">MOV</button>
+            <button onclick="xchgSelected()">XCHG</button>
+        </div>
+
+        <div class="dropdowns">
+            <select id="source-register">
+                <option value="ax">AX</option>
+                <option value="bx">BX</option>
+                <option value="cx">CX</option>
+                <option value="dx">DX</option>
+            </select>
+            <span>→</span>
+            <select id="target-register">
+                <option value="ax">AX</option>
+                <option value="bx">BX</option>
+                <option value="cx">CX</option>
+                <option value="dx">DX</option>
+            </select>
+        </div>        
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
