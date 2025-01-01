@@ -30,26 +30,26 @@
 
         <!-- Przyciski do randomizacji i czyszczenia -->
         <div class="buttons">
-            <button onclick="randomizeRegisters()">RANDOM</button>
-            <button onclick="clearRegisters()">CLEAR</button>
+            <button onclick="randomizeRegisters()" title="Generates random hexadecimal values for all registers">RANDOM</button>
+            <button onclick="clearRegisters()" title="Clears all register values">CLEAR</button>
         </div>
 
         <!-- Operacje rejestrów -->
         <div class="actions">
-            <button onclick="executeOperation('mov')">MOV</button>
-            <button onclick="executeOperation('xchg')">XCHG</button>
+            <button onclick="executeOperation('mov')" title="Moves the value from the source register to the target register">MOV</button>
+            <button onclick="executeOperation('xchg')" title="Swaps the values of the source and target registers">XCHG</button>
         </div>
 
         <!-- Dropdowny -->
         <div class="dropdowns">
-            <select id="source-register">
+            <select id="source-register" title="Select the source register">
                 <option value="ax">AX</option>
                 <option value="bx">BX</option>
                 <option value="cx">CX</option>
                 <option value="dx">DX</option>
             </select>
             <span>→</span>
-            <select id="target-register">
+            <select id="target-register" title="Select the target register">
                 <option value="ax">AX</option>
                 <option value="bx">BX</option>
                 <option value="cx">CX</option>
@@ -62,56 +62,56 @@
             <div class="memory-addressing">
                 <h3>Memory Addressing</h3>
                 <div>
-                    <label for="mem-bx">BX:</label><input type="text" id="mem-bx" placeholder="0000">
+                    <label for="mem-bx">BX:</label><input type="text" id="mem-bx" placeholder="0000" title="Enter value for BX register">
                 </div>
                 <div>
-                    <label for="mem-bp">BP:</label><input type="text" id="mem-bp" placeholder="0000">
+                    <label for="mem-bp">BP:</label><input type="text" id="mem-bp" placeholder="0000" title="Enter value for BP register">
                 </div>
                 <div>
-                    <label for="mem-si">SI:</label><input type="text" id="mem-si" placeholder="0000">
+                    <label for="mem-si">SI:</label><input type="text" id="mem-si" placeholder="0000" title="Enter value for SI register">
                 </div>
                 <div>
-                    <label for="mem-di">DI:</label><input type="text" id="mem-di" placeholder="0000">
+                    <label for="mem-di">DI:</label><input type="text" id="mem-di" placeholder="0000" title="Enter value for DI register">
                 </div>
                 <div>
-                    <label for="mem-offset">Offset:</label><input type="text" id="mem-offset" placeholder="0000">
+                    <label for="mem-offset">Offset:</label><input type="text" id="mem-offset" placeholder="0000" title="Enter offset value">
                 </div>
                 <div>
                     <label for="addressing-mode">Addressing Mode:</label>
-                    <select id="addressing-mode">
+                    <select id="addressing-mode" title="Select addressing mode">
                         <option value="base">Base</option>
                         <option value="index">Index</option>
                         <option value="base-index">Base + Index</option>
                     </select>
                 </div>
-                <button onclick="calculateAddress()">Calculate Address</button>
+                <button onclick="calculateAddress()" title="Calculates memory address based on the selected mode">Calculate Address</button>
                 <div id="address-result"></div>
             </div>
 
             <div class="memory-actions">
                 <h3>Memory Operations</h3>
                 <label for="memory-register-ops">Select Register:</label>
-                <select id="memory-register-ops">
+                <select id="memory-register-ops" title="Select register for memory operation">
                     <option value="ax">AX</option>
                     <option value="bx">BX</option>
                     <option value="cx">CX</option>
                     <option value="dx">DX</option>
                 </select>
-                <button onclick="moveToMemory()">MOV Register → Memory</button>
-                <button onclick="moveFromMemory()">MOV Memory → Register</button>
+                <button onclick="moveToMemory()" title="Moves the selected register's value to memory">MOV Register → Memory</button>
+                <button onclick="moveFromMemory()" title="Moves the value from memory to the selected register">MOV Memory → Register</button>
             </div>
 
             <div class="stack-actions">
                 <h3>Stack Operations</h3>
                 <label for="memory-register-stack">Select Register:</label>
-                <select id="memory-register-stack">
+                <select id="memory-register-stack" title="Select register for stack operation">
                     <option value="ax">AX</option>
                     <option value="bx">BX</option>
                     <option value="cx">CX</option>
                     <option value="dx">DX</option>
                 </select>
-                <button onclick="pushToStack()">PUSH Register → Stack</button>
-                <button onclick="popFromStack()">POP Stack → Register</button>
+                <button onclick="pushToStack()" title="Pushes the selected register value to the stack">PUSH Register → Stack</button>
+                <button onclick="popFromStack()" title="Pops a value from the stack and places it in the selected register">POP Stack → Register</button>
             </div>
         </div>
     </div>
