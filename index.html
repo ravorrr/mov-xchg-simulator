@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symulator MOV i XCHG</title>
+    <title>Symulator MOV, XCHG, PUSH, POP</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Rejestry -->
+        <!-- Rejestry na górze -->
         <div class="registers">
             <div class="register">
                 <label for="ax">AX:</label>
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <!-- Przyciski -->
+        <!-- Przyciski do randomizacji i czyszczenia -->
         <div class="buttons">
             <button onclick="randomValues()">RANDOM</button>
             <button onclick="clearRegisters()">CLEAR</button>
@@ -55,40 +55,54 @@
                 <option value="cx">CX</option>
                 <option value="dx">DX</option>
             </select>
-        </div>   
-
-        <!-- Adresowanie pamięci -->
-        <div class="memory-addressing">
-            <h3>Memory Addressing</h3>
-            <label for="bx">BX:</label><input type="text" id="mem-bx" placeholder="0000">
-            <label for="bp">BP:</label><input type="text" id="mem-bp" placeholder="0000">
-            <label for="si">SI:</label><input type="text" id="mem-si" placeholder="0000">
-            <label for="di">DI:</label><input type="text" id="mem-di" placeholder="0000">
-            <label for="offset">Offset:</label><input type="text" id="mem-offset" placeholder="0000">
-            <div>
-                <label for="addressing-mode">Addressing Mode:</label>
-                <select id="addressing-mode">
-                    <option value="base">Base</option>
-                    <option value="index">Index</option>
-                    <option value="base-index">Base + Index</option>
-                </select>
-            </div>
-            <button onclick="calculateAddress()">Calculate Address</button>
-            <div id="address-result"></div>
         </div>
 
-        <!-- Operacje pamięci -->
-        <div class="memory-actions">
-            <h3>Memory Operations</h3>
-            <label for="memory-register">Select Register:</label>
-            <select id="memory-register">
-                <option value="ax">AX</option>
-                <option value="bx">BX</option>
-                <option value="cx">CX</option>
-                <option value="dx">DX</option>
-            </select>
-            <button onclick="movToMemory()">MOV Register → Memory</button>
-            <button onclick="movFromMemory()">MOV Memory → Register</button>
+        <!-- Sekcje obok siebie -->
+        <div class="main-sections">
+            <div class="memory-addressing">
+                <h3>Memory Addressing</h3>
+                <label for="mem-bx">BX:</label><input type="text" id="mem-bx" placeholder="0000">
+                <label for="mem-bp">BP:</label><input type="text" id="mem-bp" placeholder="0000">
+                <label for="mem-si">SI:</label><input type="text" id="mem-si" placeholder="0000">
+                <label for="mem-di">DI:</label><input type="text" id="mem-di" placeholder="0000">
+                <label for="mem-offset">Offset:</label><input type="text" id="mem-offset" placeholder="0000">
+                <div>
+                    <label for="addressing-mode">Addressing Mode:</label>
+                    <select id="addressing-mode">
+                        <option value="base">Base</option>
+                        <option value="index">Index</option>
+                        <option value="base-index">Base + Index</option>
+                    </select>
+                </div>
+                <button onclick="calculateAddress()">Calculate Address</button>
+                <div id="address-result"></div>
+            </div>
+
+            <div class="memory-actions">
+                <h3>Memory Operations</h3>
+                <label for="memory-register-ops">Select Register:</label>
+                <select id="memory-register-ops">
+                    <option value="ax">AX</option>
+                    <option value="bx">BX</option>
+                    <option value="cx">CX</option>
+                    <option value="dx">DX</option>
+                </select>
+                <button onclick="movToMemory()">MOV Register → Memory</button>
+                <button onclick="movFromMemory()">MOV Memory → Register</button>
+            </div>
+
+            <div class="stack-actions">
+                <h3>Stack Operations</h3>
+                <label for="memory-register-stack">Select Register:</label>
+                <select id="memory-register-stack">
+                    <option value="ax">AX</option>
+                    <option value="bx">BX</option>
+                    <option value="cx">CX</option>
+                    <option value="dx">DX</option>
+                </select>
+                <button onclick="pushToStack()">PUSH Register → Stack</button>
+                <button onclick="popFromStack()">POP Stack → Register</button>
+            </div>
         </div>
     </div>
     <script src="js/main.js"></script>

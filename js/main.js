@@ -1,4 +1,6 @@
 const memory = new Array(65536).fill(0); // Symulacja 64 KB pamięci
+const stack = []; // Stos
+const stackSize = 16; // Maksymalny rozmiar stosu
 
 // Losowanie wartości HEX
 function randomValues() {
@@ -78,11 +80,6 @@ function calculateAddress() {
         address = bx + si + offset; // Tryb bazowo-indeksowy
     }
 
-    // Logowanie wartości dla debugowania
-    console.log(`Mode: ${mode}`);
-    console.log(`BX: ${bx}, BP: ${bp}, SI: ${si}, DI: ${di}, Offset: ${offset}`);
-    console.log(`Calculated Address: ${address}`);
-
     // Sprawdzanie zakresu adresu
     if (address < 0 || address >= memory.length) {
         alert("Adres pamięci poza zakresem (0 - 65535)!");
@@ -96,25 +93,23 @@ function calculateAddress() {
 
 // Funkcja przesyłania wartości z rejestru do pamięci
 function movToMemory() {
-    const register = document.getElementById("memory-register").value; // Wybór rejestru
+    const register = document.getElementById("memory-register-ops").value; // Wybór rejestru
     const address = calculateAddress(); // Obliczenie adresu
     if (address === null) return; // Sprawdzenie poprawności adresu
 
     const value = parseInt(document.getElementById(register).value || "0", 16);
     memory[address] = value; // Zapisanie wartości w pamięci
 
-    console.log(`Zapisano ${value.toString(16).toUpperCase()} pod adresem ${address.toString(16).toUpperCase()}`);
     alert(`Zapisano wartość ${value.toString(16).toUpperCase()} z ${register.toUpperCase()} do pamięci pod adresem ${address.toString(16).toUpperCase()}`);
 }
 
 // Funkcja przesyłania wartości z pamięci do rejestru
 function movFromMemory() {
-    const register = document.getElementById("memory-register").value; // Wybór rejestru
+    const register = document.getElementById("memory-register-ops").value; // Wybór rejestru
     const address = calculateAddress(); // Obliczenie adresu
     if (address === null) return; // Sprawdzenie poprawności adresu
 
     const value = memory[address]; // Pobranie wartości z pamięci
-    console.log(`Value at Memory[${address.toString(16).toUpperCase()}]: ${value}`);
 
     if (value === undefined || value === 0) {
         alert("Komórka pamięci jest pusta!");
@@ -123,4 +118,30 @@ function movFromMemory() {
 
     document.getElementById(register).value = value.toString(16).toUpperCase().padStart(4, "0"); // Odczyt wartości z pamięci
     alert(`Załadowano wartość ${value.toString(16).toUpperCase()} z pamięci pod adresem ${address.toString(16).toUpperCase()} do ${register.toUpperCase()}`);
+}
+
+// Funkcja PUSH do stosu
+function pushToStack() {
+    const register = document.getElementById("memory-register-stack").value;
+    const value = parseInt(document.getElementById(register).value || "0", 16);
+
+    if (stack.length < stackSize) {
+        stack.push(value); // Dodanie wartości do stosu
+        alert(`PUSH ${register.toUpperCase()} → Stack: ${value.toString(16).toUpperCase()}`);
+    } else {
+        alert("Stos jest pełny!");
+    }
+}
+
+// Funkcja POP ze stosu
+function popFromStack() {
+    const register = document.getElementById("memory-register-stack").value;
+
+    if (stack.length > 0) {
+        const value = stack.pop(); // Pobranie wartości ze stosu
+        document.getElementById(register).value = value.toString(16).toUpperCase().padStart(4, "0");
+        alert(`POP Stack → ${register.toUpperCase()}: ${value.toString(16).toUpperCase()}`);
+    } else {
+        alert("Stos jest pusty!");
+    }
 }

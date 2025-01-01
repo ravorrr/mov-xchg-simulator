@@ -13,15 +13,18 @@ body {
     background-color: #3a3a3a;
     padding: 20px;
     border-radius: 10px;
-    width: 450px;
+    width: 90%;
     text-align: center;
+    display: flex;
+    flex-direction: column; /* Zmiana na kolumnowy układ */
+    gap: 20px;
 }
 
 .registers {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 10px; /* Zmniejszenie odstępu pomiędzy rejestrami */
+    margin-bottom: 10px; /* Zmniejszenie marginesu dolnego */
 }
 
 .register {
@@ -36,7 +39,7 @@ body {
 }
 
 .register input {
-    width: 60px;
+    width: 50px; /* Zmniejszenie szerokości pól rejestrów */
     padding: 5px;
     text-align: center;
     background-color: #4a4a4a;
@@ -45,8 +48,8 @@ body {
     color: white;
 }
 
-.buttons, .actions, .dropdowns, .memory-addressing, .memory-actions {
-    margin-bottom: 15px;
+.buttons, .actions, .dropdowns {
+    margin-bottom: 10px; /* Zmniejszenie marginesu dolnego */
 }
 
 button {
@@ -71,26 +74,36 @@ select {
     border-radius: 5px;
 }
 
-.memory-addressing {
-    text-align: left;
-    margin: 20px auto;
+.main-sections {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-.memory-addressing h3 {
+.memory-addressing, .memory-actions, .stack-actions {
+    display: flex;
+    flex-direction: column;
+    width: 30%; /* Ustal szerokość dla każdej sekcji */
+    padding: 10px;
+    border: 1px solid #fff; /* Obramowanie dla każdej sekcji */
+    border-radius: 5px;
+    background-color: #4a4a4a;
+}
+
+.memory-addressing h3, .memory-actions h3, .stack-actions h3 {
     margin-bottom: 10px;
-    text-align: center;
     color: #FFD700;
 }
 
-.memory-addressing label {
+.memory-addressing label, .memory-actions label, .stack-actions label {
     display: inline-block;
     width: 100px;
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
-.memory-addressing input {
-    width: 100px;
+.memory-addressing input, .memory-actions input, .stack-actions input {
+    width: 80px; /* Zmniejszenie szerokości pól do wpisywania */
     padding: 5px;
     background-color: #4a4a4a;
     color: white;
@@ -99,17 +112,12 @@ select {
     text-align: center;
 }
 
-.memory-actions {
+.memory-actions, .stack-actions {
     text-align: center;
     margin-top: 20px;
 }
 
-.memory-actions h3 {
-    margin-bottom: 10px;
-    color: #FFD700;
-}
-
-.memory-actions select {
+.memory-actions select, .stack-actions select {
     margin: 5px;
     padding: 5px;
     background-color: #4a4a4a;
