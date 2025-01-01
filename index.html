@@ -30,14 +30,14 @@
 
         <!-- Przyciski do randomizacji i czyszczenia -->
         <div class="buttons">
-            <button onclick="randomValues()">RANDOM</button>
+            <button onclick="randomizeRegisters()">RANDOM</button>
             <button onclick="clearRegisters()">CLEAR</button>
         </div>
 
         <!-- Operacje rejestrów -->
         <div class="actions">
-            <button onclick="movSelected()">MOV</button>
-            <button onclick="xchgSelected()">XCHG</button>
+            <button onclick="executeOperation('mov')">MOV</button>
+            <button onclick="executeOperation('xchg')">XCHG</button>
         </div>
 
         <!-- Dropdowny -->
@@ -61,11 +61,21 @@
         <div class="main-sections">
             <div class="memory-addressing">
                 <h3>Memory Addressing</h3>
-                <label for="mem-bx">BX:</label><input type="text" id="mem-bx" placeholder="0000">
-                <label for="mem-bp">BP:</label><input type="text" id="mem-bp" placeholder="0000">
-                <label for="mem-si">SI:</label><input type="text" id="mem-si" placeholder="0000">
-                <label for="mem-di">DI:</label><input type="text" id="mem-di" placeholder="0000">
-                <label for="mem-offset">Offset:</label><input type="text" id="mem-offset" placeholder="0000">
+                <div>
+                    <label for="mem-bx">BX:</label><input type="text" id="mem-bx" placeholder="0000">
+                </div>
+                <div>
+                    <label for="mem-bp">BP:</label><input type="text" id="mem-bp" placeholder="0000">
+                </div>
+                <div>
+                    <label for="mem-si">SI:</label><input type="text" id="mem-si" placeholder="0000">
+                </div>
+                <div>
+                    <label for="mem-di">DI:</label><input type="text" id="mem-di" placeholder="0000">
+                </div>
+                <div>
+                    <label for="mem-offset">Offset:</label><input type="text" id="mem-offset" placeholder="0000">
+                </div>
                 <div>
                     <label for="addressing-mode">Addressing Mode:</label>
                     <select id="addressing-mode">
@@ -87,8 +97,8 @@
                     <option value="cx">CX</option>
                     <option value="dx">DX</option>
                 </select>
-                <button onclick="movToMemory()">MOV Register → Memory</button>
-                <button onclick="movFromMemory()">MOV Memory → Register</button>
+                <button onclick="moveToMemory()">MOV Register → Memory</button>
+                <button onclick="moveFromMemory()">MOV Memory → Register</button>
             </div>
 
             <div class="stack-actions">
