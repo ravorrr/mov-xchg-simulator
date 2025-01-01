@@ -13,7 +13,7 @@ body {
     background-color: #3a3a3a;
     padding: 20px;
     border-radius: 10px;
-    width: 350px;
+    width: 450px;
     text-align: center;
 }
 
@@ -45,7 +45,7 @@ body {
     color: white;
 }
 
-.buttons, .actions, .dropdowns {
+.buttons, .actions, .dropdowns, .memory-addressing, .memory-actions {
     margin-bottom: 15px;
 }
 
@@ -64,6 +64,53 @@ button:hover {
 }
 
 select {
+    padding: 5px;
+    background-color: #4a4a4a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.memory-addressing {
+    text-align: left;
+    margin: 20px auto;
+}
+
+.memory-addressing h3 {
+    margin-bottom: 10px;
+    text-align: center;
+    color: #FFD700;
+}
+
+.memory-addressing label {
+    display: inline-block;
+    width: 100px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.memory-addressing input {
+    width: 100px;
+    padding: 5px;
+    background-color: #4a4a4a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.memory-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.memory-actions h3 {
+    margin-bottom: 10px;
+    color: #FFD700;
+}
+
+.memory-actions select {
+    margin: 5px;
     padding: 5px;
     background-color: #4a4a4a;
     color: white;
