@@ -57,18 +57,21 @@ function calculateAddress() {
     const offset = parseInt(document.getElementById("mem-offset").value || "0", 16);
     const mode = document.getElementById("addressing-mode").value;
 
-    // Logowanie danych przed obliczeniem
-    console.log(`BX: ${bx.toString(16)}, BP: ${bp.toString(16)}, SI: ${si.toString(16)}, DI: ${di.toString(16)}, Offset: ${offset.toString(16)}`);
-    
     let address = 0;
 
     // Zależnie od trybu adresowania, oblicz adres
     if (mode === "base") {
-        address = bp + offset;
+        // Tryb bazowy: BX lub BP + Offset
+        address = bx + offset;  // Użycie BX jako rejestru bazowego
+        console.log(`Base mode address: BX + Offset = ${bx} + ${offset} = ${address}`);
     } else if (mode === "index") {
-        address = si + offset;
+        // Tryb indeksowy: SI lub DI + Offset
+        address = si + offset; // Użycie SI jako rejestru indeksowego
+        console.log(`Index mode address: SI + Offset = ${si} + ${offset} = ${address}`);
     } else if (mode === "base-index") {
-        address = bp + di + offset; // Poprawiona formuła: dodajemy BP i DI
+        // Tryb bazowo-indeksowy: BX/BP + SI/DI + Offset
+        address = bx + si + offset; // Użycie BX i SI jako bazowego i indeksowego
+        console.log(`Base + Index mode address: BX + SI + Offset = ${bx} + ${si} + ${offset} = ${address}`);
     }
 
     // Logowanie obliczonego adresu
