@@ -83,7 +83,7 @@ function handleMemoryMov(sourceId, targetId) {
 // Obsługa XCHG dla pamięci
 function handleMemoryXchg(sourceId, targetId) {
     const address = calculateAddress(); // Oblicz adres pamięci
-    if (address === null) return; // Jeśli adres nieprawidłowy, zakończ
+    if (address === null) return; // Jeśli adres niepoprawny, zakończ
 
     if (sourceId === "memory") {
         // Wymiana pamięć → rejestr
@@ -94,9 +94,9 @@ function handleMemoryXchg(sourceId, targetId) {
         memory[address] = parseInt(regValue, 16); // Zapisz wartość rejestru do pamięci
         document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0"); // Zapisz wartość pamięci do rejestru
 
-        // Logowanie i komunikat
-        console.log(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memoryValue.toString(16).toUpperCase()}, Reg=${regValue}`);
-        alert(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memoryValue.toString(16).toUpperCase()}, Reg=${regValue}`);
+        // Poprawione logowanie
+        console.log(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memoryValue.toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
+        alert(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memoryValue.toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
     } else {
         // Wymiana rejestr → pamięć
         const regValue = document.getElementById(sourceId).value; // Pobierz wartość z rejestru
@@ -106,9 +106,9 @@ function handleMemoryXchg(sourceId, targetId) {
         memory[address] = parseInt(regValue, 16); // Zapisz wartość rejestru do pamięci
         document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0"); // Zapisz wartość pamięci do rejestru
 
-        // Logowanie i komunikat
-        console.log(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${regValue}, Memory=${memoryValue.toString(16).toUpperCase()}`);
-        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${regValue}, Memory=${memoryValue.toString(16).toUpperCase()}`);
+        // Poprawione logowanie
+        console.log(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${document.getElementById(sourceId).value}, Memory=${memoryValue.toString(16).toUpperCase()}`);
+        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${document.getElementById(sourceId).value}, Memory=${memoryValue.toString(16).toUpperCase()}`);
     }
 }
 
