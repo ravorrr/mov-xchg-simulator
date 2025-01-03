@@ -1,3 +1,4 @@
+// Symulacja pamięci i stosu
 const memory = new Array(65536).fill(0);  // Symulacja 64 KB pamięci
 const stack = [];  // Stos
 const stackSize = 16;  // Maksymalny rozmiar stosu
@@ -24,26 +25,44 @@ function executeOperation(operation) {
     const sourceId = document.getElementById("source-register").value;
     const targetId = document.getElementById("target-register").value;
 
-    // Zapobieganie operacjom na tym samym rejestrze
-    if (sourceId === targetId) {
-        alert("Źródło i cel nie mogą być takie same!");
+    // Sprawdzenie, czy operacja dotyczy pamięci
+    if (operation === "xchg" && (sourceId === "memory" || targetId === "memory")) {
+        const address = calculateAddress(); // Obliczenie adresu pamięci
+        if (address === null) return; // Wyjdź, jeśli adres niepoprawny
+
+        if (sourceId === "memory") {
+            // Wymiana pamięć → rejestr
+            const memoryValue = memory[address];
+            const registerValue = document.getElementById(targetId).value;
+
+            // Zamiana wartości
+            memory[address] = parseInt(registerValue, 16);
+            document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
+
+            alert(`AX: ${document.getElementById(targetId).value}\nPamięć [Adres ${address.toString(16).toUpperCase()}]: ${memory[address].toString(16).toUpperCase()}`);
+        } else if (targetId === "memory") {
+            // Wymiana rejestr → pamięć
+            const registerValue = document.getElementById(sourceId).value;
+            const memoryValue = memory[address];
+
+            // Zamiana wartości
+            memory[address] = parseInt(registerValue, 16);
+            document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
+
+            alert(`AX: ${document.getElementById(sourceId).value}\nPamięć [Adres ${address.toString(16).toUpperCase()}]: ${memory[address].toString(16).toUpperCase()}`);
+        }        
         return;
     }
 
-    const value = document.getElementById(sourceId).value;
+    // Wymiana rejestr ↔ rejestr
+    if (operation === "xchg") {
+        const sourceValue = document.getElementById(sourceId).value;
+        const targetValue = document.getElementById(targetId).value;
 
-    if (value) {
-        if (operation === "mov") {
-            document.getElementById(targetId).value = value;
-            alert(`MOV ${sourceId.toUpperCase()} → ${targetId.toUpperCase()}: ${value}`);
-        } else if (operation === "xchg") {
-            const targetValue = document.getElementById(targetId).value;
-            document.getElementById(sourceId).value = targetValue;
-            document.getElementById(targetId).value = value;
-            alert(`XCHG ${sourceId.toUpperCase()} ↔ ${targetId.toUpperCase()}`);
-        }
-    } else {
-        alert(`Rejestr ${sourceId.toUpperCase()} jest pusty!`);
+        document.getElementById(sourceId).value = targetValue;
+        document.getElementById(targetId).value = sourceValue;
+
+        alert(`XCHG ${sourceId.toUpperCase()} ↔ ${targetId.toUpperCase()}`);
     }
 }
 
@@ -59,25 +78,57 @@ function calculateAddress() {
 
     let address = 0;
 
-    // Zależnie od trybu adresowania, oblicz adres
-    if (mode === "base") {
-        // Tryb bazowy: BX lub BP + Offset
-        address = bx + offset;  // Użycie BX jako rejestru bazowego
-        console.log(`Base mode address: BX + Offset = ${bx} + ${offset} = ${address}`);
-    } else if (mode === "index") {
-        // Tryb indeksowy: SI lub DI + Offset
-        address = si + offset; // Użycie SI jako rejestru indeksowego
-        console.log(`Index mode address: SI + Offset = ${si} + ${offset} = ${address}`);
-    } else if (mode === "base-index") {
-        // Tryb bazowo-indeksowy: BX/BP + SI/DI + Offset
-        address = bx + si + offset; // Użycie BX i SI jako bazowego i indeksowego
-        console.log(`Base + Index mode address: BX + SI + Offset = ${bx} + ${si} + ${offset} = ${address}`);
+    // Obliczanie adresu w zależności od trybu
+    switch (mode) {
+        case "base":
+            // Tryb bazowy: BX lub BP
+            if (bx !== 0) {
+                address = bx + offset; // BX jako baza
+            } else if (bp !== 0) {
+                address = bp + offset; // BP jako baza
+            } else {
+                alert("Brak wartości w rejestrach bazowych (BX/BP)!");
+                return null;
+            }
+            break;
+
+        case "index":
+            // Tryb indeksowy: SI lub DI
+            if (si !== 0) {
+                address = si + offset; // SI jako indeks
+            } else if (di !== 0) {
+                address = di + offset; // DI jako indeks
+            } else {
+                alert("Brak wartości w rejestrach indeksowych (SI/DI)!");
+                return null;
+            }
+            break;
+
+        case "base-index":
+            // Tryb bazowo-indeksowy: BX+SI, BX+DI, BP+SI, BP+DI
+            if (bx !== 0 && si !== 0) {
+                address = bx + si + offset; // BX + SI
+            } else if (bx !== 0 && di !== 0) {
+                address = bx + di + offset; // BX + DI
+            } else if (bp !== 0 && si !== 0) {
+                address = bp + si + offset; // BP + SI
+            } else if (bp !== 0 && di !== 0) {
+                address = bp + di + offset; // BP + DI
+            } else {
+                alert("Brak odpowiednich wartości w rejestrach bazowych i indeksowych!");
+                return null;
+            }
+            break;
+
+        default:
+            alert("Nieprawidłowy tryb adresowania!");
+            return null;
     }
 
     // Logowanie obliczonego adresu
     console.log(`Calculated Address: ${address.toString(16).toUpperCase()}`);
 
-    // Sprawdzenie, czy adres jest w dopuszczalnym zakresie
+    // Sprawdzenie, czy adres jest w dopuszczalnym zakresie (0 - 65535)
     if (address < 0 || address >= memory.length) {
         alert("Adres pamięci poza zakresem (0 - 65535)!");
         document.getElementById("address-result").innerText = "Nieprawidłowy adres!";
