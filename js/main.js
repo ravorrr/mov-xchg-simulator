@@ -9,6 +9,7 @@ function randomizeRegisters() {
         const randomValue = Math.floor(Math.random() * 0xffff).toString(16).toUpperCase();
         document.getElementById(reg).value = randomValue.padStart(4, "0");
     });
+    console.log("Rejestry zrandomizowane:", registers.map((reg) => `${reg.toUpperCase()}: ${document.getElementById(reg).value}`));
 }
 
 // Czyszczenie wszystkich rejestrów
@@ -17,6 +18,7 @@ function clearRegisters() {
     registers.forEach((reg) => {
         document.getElementById(reg).value = "";
     });
+    console.log("Rejestry wyczyszczone");
 }
 
 // Wykonywanie operacji MOV i XCHG
@@ -37,6 +39,7 @@ function executeOperation(operation) {
         }
 
         document.getElementById(targetId).value = sourceValue;
+        console.log(`MOV ${sourceId.toUpperCase()} → ${targetId.toUpperCase()}: ${sourceValue}`);
         alert(`MOV ${sourceId.toUpperCase()} → ${targetId.toUpperCase()}: ${sourceValue}`);
     } else if (operation === "xchg") {
         if (sourceId === "memory" || targetId === "memory") {
@@ -50,6 +53,7 @@ function executeOperation(operation) {
         document.getElementById(sourceId).value = targetValue;
         document.getElementById(targetId).value = sourceValue;
 
+        console.log(`XCHG ${sourceId.toUpperCase()} ↔ ${targetId.toUpperCase()}`);
         alert(`XCHG ${sourceId.toUpperCase()} ↔ ${targetId.toUpperCase()}`);
     }
 }
@@ -66,31 +70,45 @@ function handleMemoryMov(sourceId, targetId) {
             return;
         }
         document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
+        console.log(`MOV Memory [${address.toString(16).toUpperCase()}] → ${targetId.toUpperCase()}: ${memoryValue}`);
         alert(`MOV Memory → ${targetId.toUpperCase()}: ${memoryValue.toString(16).toUpperCase()}`);
     } else {
         const value = document.getElementById(sourceId).value;
         memory[address] = parseInt(value, 16);
+        console.log(`MOV ${sourceId.toUpperCase()} → Memory [${address.toString(16).toUpperCase()}]: ${value}`);
         alert(`MOV ${sourceId.toUpperCase()} → Memory [${address.toString(16).toUpperCase()}]: ${value}`);
     }
 }
 
 // Obsługa XCHG dla pamięci
 function handleMemoryXchg(sourceId, targetId) {
-    const address = calculateAddress();
-    if (address === null) return;
+    const address = calculateAddress(); // Oblicz adres pamięci
+    if (address === null) return; // Jeśli adres nieprawidłowy, zakończ
 
     if (sourceId === "memory") {
-        const memoryValue = memory[address];
-        const regValue = document.getElementById(targetId).value;
-        memory[address] = parseInt(regValue, 16);
-        document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
-        alert(`XCHG Memory ↔ ${targetId.toUpperCase()}`);
+        // Wymiana pamięć → rejestr
+        const memoryValue = memory[address]; // Pobierz wartość z pamięci
+        const regValue = document.getElementById(targetId).value; // Pobierz wartość z rejestru
+
+        // Zamiana wartości
+        memory[address] = parseInt(regValue, 16); // Zapisz wartość rejestru do pamięci
+        document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0"); // Zapisz wartość pamięci do rejestru
+
+        // Logowanie i komunikat
+        console.log(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memoryValue.toString(16).toUpperCase()}, Reg=${regValue}`);
+        alert(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memoryValue.toString(16).toUpperCase()}, Reg=${regValue}`);
     } else {
-        const regValue = document.getElementById(sourceId).value;
-        const memoryValue = memory[address];
-        memory[address] = parseInt(regValue, 16);
-        document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
-        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory`);
+        // Wymiana rejestr → pamięć
+        const regValue = document.getElementById(sourceId).value; // Pobierz wartość z rejestru
+        const memoryValue = memory[address]; // Pobierz wartość z pamięci
+
+        // Zamiana wartości
+        memory[address] = parseInt(regValue, 16); // Zapisz wartość rejestru do pamięci
+        document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0"); // Zapisz wartość pamięci do rejestru
+
+        // Logowanie i komunikat
+        console.log(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${regValue}, Memory=${memoryValue.toString(16).toUpperCase()}`);
+        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${regValue}, Memory=${memoryValue.toString(16).toUpperCase()}`);
     }
 }
 
@@ -105,13 +123,12 @@ function calculateAddress() {
 
     let address = 0;
 
-    // Obliczanie adresu w zależności od trybu
     switch (mode) {
         case "base":
             if (bx !== 0) {
-                address = bx + offset; // BX jako baza
+                address = bx + offset;
             } else if (bp !== 0) {
-                address = bp + offset; // BP jako baza
+                address = bp + offset;
             } else {
                 alert("Brak wartości w rejestrach bazowych (BX/BP)!");
                 return null;
@@ -120,9 +137,9 @@ function calculateAddress() {
 
         case "index":
             if (si !== 0) {
-                address = si + offset; // SI jako indeks
+                address = si + offset;
             } else if (di !== 0) {
-                address = di + offset; // DI jako indeks
+                address = di + offset;
             } else {
                 alert("Brak wartości w rejestrach indeksowych (SI/DI)!");
                 return null;
@@ -131,13 +148,13 @@ function calculateAddress() {
 
         case "base-index":
             if (bx !== 0 && si !== 0) {
-                address = bx + si + offset; // BX + SI
+                address = bx + si + offset;
             } else if (bx !== 0 && di !== 0) {
-                address = bx + di + offset; // BX + DI
+                address = bx + di + offset;
             } else if (bp !== 0 && si !== 0) {
-                address = bp + si + offset; // BP + SI
+                address = bp + si + offset;
             } else if (bp !== 0 && di !== 0) {
-                address = bp + di + offset; // BP + DI
+                address = bp + di + offset;
             } else {
                 alert("Brak odpowiednich wartości w rejestrach bazowych i indeksowych!");
                 return null;
@@ -154,6 +171,7 @@ function calculateAddress() {
         return null;
     }
 
+    console.log(`Obliczony adres: ${address.toString(16).toUpperCase()}`);
     document.getElementById("address-result").innerText = `Adres pamięci: ${address.toString(16).toUpperCase()}`;
     return address;
 }
