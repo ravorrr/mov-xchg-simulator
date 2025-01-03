@@ -85,6 +85,8 @@ function handleMemoryXchg(sourceId, targetId) {
     const address = calculateAddress(); // Oblicz adres pamięci
     if (address === null) return;
 
+    const hexAddress = address.toString(16).toUpperCase(); // Konwertuj adres na system szesnastkowy
+
     if (sourceId === "memory") {
         // Wymiana pamięć → rejestr
         const memoryValue = memory[address];
@@ -95,8 +97,8 @@ function handleMemoryXchg(sourceId, targetId) {
         document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
 
         // Logowanie po aktualizacji wartości
-        console.log(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memory[address].toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
-        alert(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memory[address].toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
+        console.log(`XCHG Memory [${hexAddress}] ↔ ${targetId.toUpperCase()}: Memory=${memory[address].toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
+        alert(`XCHG Memory [${hexAddress}] ↔ ${targetId.toUpperCase()}: Memory=${memory[address].toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
     } else {
         // Wymiana rejestr → pamięć
         const regValue = document.getElementById(sourceId).value;
@@ -107,8 +109,8 @@ function handleMemoryXchg(sourceId, targetId) {
         document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
 
         // Logowanie po aktualizacji wartości
-        console.log(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${document.getElementById(sourceId).value}, Memory=${memory[address].toString(16).toUpperCase()}`);
-        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${document.getElementById(sourceId).value}, Memory=${memory[address].toString(16).toUpperCase()}`);
+        console.log(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${hexAddress}]: Reg=${document.getElementById(sourceId).value}, Memory=${memory[address].toString(16).toUpperCase()}`);
+        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${hexAddress}]: Reg=${document.getElementById(sourceId).value}, Memory=${memory[address].toString(16).toUpperCase()}`);
     }
 }
 
@@ -120,6 +122,8 @@ function calculateAddress() {
     const di = parseInt(document.getElementById("mem-di").value || "0", 16);
     const offset = parseInt(document.getElementById("mem-offset").value || "0", 16);
     const mode = document.getElementById("addressing-mode").value;
+
+    console.log(`BX=${bx.toString(16).toUpperCase()}, BP=${bp.toString(16).toUpperCase()}, SI=${si.toString(16).toUpperCase()}, DI=${di.toString(16).toUpperCase()}, Offset=${offset.toString(16).toUpperCase()}, Mode=${mode}`);
 
     let address = 0;
 
@@ -166,12 +170,15 @@ function calculateAddress() {
             return null;
     }
 
+    // Logowanie adresu w systemie szesnastkowym
+    console.log(`Obliczony adres: ${address.toString(16).toUpperCase()}`);
+    
     if (address < 0 || address >= memory.length) {
         alert("Adres pamięci poza zakresem (0 - 65535)!");
+        document.getElementById("address-result").innerText = "Nieprawidłowy adres!";
         return null;
     }
 
-    console.log(`Obliczony adres: ${address.toString(16).toUpperCase()}`);
     document.getElementById("address-result").innerText = `Adres pamięci: ${address.toString(16).toUpperCase()}`;
     return address;
 }
