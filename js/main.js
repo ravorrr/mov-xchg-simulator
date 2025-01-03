@@ -1,7 +1,6 @@
-// Symulacja pamięci i stosu
-const memory = new Array(65536).fill(0);  // Symulacja 64 KB pamięci
-const stack = [];  // Stos
-const stackSize = 16;  // Maksymalny rozmiar stosu
+const memory = new Array(65536).fill(0); // Symulacja 64 KB pamięci
+const stack = [];
+const stackSize = 16;
 
 // Losowanie wartości HEX dla rejestrów
 function randomizeRegisters() {
@@ -25,37 +24,26 @@ function executeOperation(operation) {
     const sourceId = document.getElementById("source-register").value;
     const targetId = document.getElementById("target-register").value;
 
-    // Sprawdzenie, czy operacja dotyczy pamięci
-    if (operation === "xchg" && (sourceId === "memory" || targetId === "memory")) {
-        const address = calculateAddress(); // Obliczenie adresu pamięci
-        if (address === null) return; // Wyjdź, jeśli adres niepoprawny
+    if (operation === "mov") {
+        if (sourceId === "memory" || targetId === "memory") {
+            handleMemoryMov(sourceId, targetId);
+            return;
+        }
 
-        if (sourceId === "memory") {
-            // Wymiana pamięć → rejestr
-            const memoryValue = memory[address];
-            const registerValue = document.getElementById(targetId).value;
+        const sourceValue = document.getElementById(sourceId).value;
+        if (!sourceValue) {
+            alert(`Rejestr ${sourceId.toUpperCase()} jest pusty!`);
+            return;
+        }
 
-            // Zamiana wartości
-            memory[address] = parseInt(registerValue, 16);
-            document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
+        document.getElementById(targetId).value = sourceValue;
+        alert(`MOV ${sourceId.toUpperCase()} → ${targetId.toUpperCase()}: ${sourceValue}`);
+    } else if (operation === "xchg") {
+        if (sourceId === "memory" || targetId === "memory") {
+            handleMemoryXchg(sourceId, targetId);
+            return;
+        }
 
-            alert(`AX: ${document.getElementById(targetId).value}\nPamięć [Adres ${address.toString(16).toUpperCase()}]: ${memory[address].toString(16).toUpperCase()}`);
-        } else if (targetId === "memory") {
-            // Wymiana rejestr → pamięć
-            const registerValue = document.getElementById(sourceId).value;
-            const memoryValue = memory[address];
-
-            // Zamiana wartości
-            memory[address] = parseInt(registerValue, 16);
-            document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
-
-            alert(`AX: ${document.getElementById(sourceId).value}\nPamięć [Adres ${address.toString(16).toUpperCase()}]: ${memory[address].toString(16).toUpperCase()}`);
-        }        
-        return;
-    }
-
-    // Wymiana rejestr ↔ rejestr
-    if (operation === "xchg") {
         const sourceValue = document.getElementById(sourceId).value;
         const targetValue = document.getElementById(targetId).value;
 
@@ -66,9 +54,48 @@ function executeOperation(operation) {
     }
 }
 
-// Obliczanie adresu pamięci w zależności od wybranego trybu adresowania
+// Obsługa MOV dla pamięci
+function handleMemoryMov(sourceId, targetId) {
+    const address = calculateAddress();
+    if (address === null) return;
+
+    if (sourceId === "memory") {
+        const memoryValue = memory[address];
+        if (!memoryValue) {
+            alert(`Pamięć pod adresem ${address.toString(16).toUpperCase()} jest pusta!`);
+            return;
+        }
+        document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
+        alert(`MOV Memory → ${targetId.toUpperCase()}: ${memoryValue.toString(16).toUpperCase()}`);
+    } else {
+        const value = document.getElementById(sourceId).value;
+        memory[address] = parseInt(value, 16);
+        alert(`MOV ${sourceId.toUpperCase()} → Memory [${address.toString(16).toUpperCase()}]: ${value}`);
+    }
+}
+
+// Obsługa XCHG dla pamięci
+function handleMemoryXchg(sourceId, targetId) {
+    const address = calculateAddress();
+    if (address === null) return;
+
+    if (sourceId === "memory") {
+        const memoryValue = memory[address];
+        const regValue = document.getElementById(targetId).value;
+        memory[address] = parseInt(regValue, 16);
+        document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
+        alert(`XCHG Memory ↔ ${targetId.toUpperCase()}`);
+    } else {
+        const regValue = document.getElementById(sourceId).value;
+        const memoryValue = memory[address];
+        memory[address] = parseInt(regValue, 16);
+        document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
+        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory`);
+    }
+}
+
+// Obliczanie adresu pamięci
 function calculateAddress() {
-    // Pobieramy wartości w systemie szesnastkowym
     const bx = parseInt(document.getElementById("mem-bx").value || "0", 16);
     const bp = parseInt(document.getElementById("mem-bp").value || "0", 16);
     const si = parseInt(document.getElementById("mem-si").value || "0", 16);
@@ -81,7 +108,6 @@ function calculateAddress() {
     // Obliczanie adresu w zależności od trybu
     switch (mode) {
         case "base":
-            // Tryb bazowy: BX lub BP
             if (bx !== 0) {
                 address = bx + offset; // BX jako baza
             } else if (bp !== 0) {
@@ -93,7 +119,6 @@ function calculateAddress() {
             break;
 
         case "index":
-            // Tryb indeksowy: SI lub DI
             if (si !== 0) {
                 address = si + offset; // SI jako indeks
             } else if (di !== 0) {
@@ -105,7 +130,6 @@ function calculateAddress() {
             break;
 
         case "base-index":
-            // Tryb bazowo-indeksowy: BX+SI, BX+DI, BP+SI, BP+DI
             if (bx !== 0 && si !== 0) {
                 address = bx + si + offset; // BX + SI
             } else if (bx !== 0 && di !== 0) {
@@ -125,17 +149,11 @@ function calculateAddress() {
             return null;
     }
 
-    // Logowanie obliczonego adresu
-    console.log(`Calculated Address: ${address.toString(16).toUpperCase()}`);
-
-    // Sprawdzenie, czy adres jest w dopuszczalnym zakresie (0 - 65535)
     if (address < 0 || address >= memory.length) {
         alert("Adres pamięci poza zakresem (0 - 65535)!");
-        document.getElementById("address-result").innerText = "Nieprawidłowy adres!";
         return null;
     }
 
-    // Wyświetlenie obliczonego adresu w formacie HEX
     document.getElementById("address-result").innerText = `Adres pamięci: ${address.toString(16).toUpperCase()}`;
     return address;
 }
@@ -147,8 +165,7 @@ function moveToMemory() {
     if (address === null) return;
 
     const value = parseInt(document.getElementById(register).value || "0", 16);
-    memory[address] = value; // Zapisanie wartości do pamięci
-
+    memory[address] = value;
     alert(`Zapisano wartość ${value.toString(16).toUpperCase()} z ${register.toUpperCase()} do pamięci pod adresem ${address.toString(16).toUpperCase()}`);
 }
 
@@ -159,7 +176,6 @@ function moveFromMemory() {
     if (address === null) return;
 
     const value = memory[address];
-
     if (value === undefined || value === 0) {
         alert("Komórka pamięci jest pusta!");
         return;
@@ -175,7 +191,7 @@ function pushToStack() {
     const value = parseInt(document.getElementById(register).value || "0", 16);
 
     if (stack.length < stackSize) {
-        stack.push(value); // Dodanie wartości na stos
+        stack.push(value);
         alert(`PUSH ${register.toUpperCase()} → Stack: ${value.toString(16).toUpperCase()}`);
     } else {
         alert("Stos jest pełny!");
@@ -187,7 +203,7 @@ function popFromStack() {
     const register = document.getElementById("memory-register-stack").value;
 
     if (stack.length > 0) {
-        const value = stack.pop(); // Pobranie wartości ze stosu
+        const value = stack.pop();
         document.getElementById(register).value = value.toString(16).toUpperCase().padStart(4, "0");
         alert(`POP Stack → ${register.toUpperCase()}: ${value.toString(16).toUpperCase()}`);
     } else {
