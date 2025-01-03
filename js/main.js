@@ -83,32 +83,32 @@ function handleMemoryMov(sourceId, targetId) {
 // Obsługa XCHG dla pamięci
 function handleMemoryXchg(sourceId, targetId) {
     const address = calculateAddress(); // Oblicz adres pamięci
-    if (address === null) return; // Jeśli adres niepoprawny, zakończ
+    if (address === null) return;
 
     if (sourceId === "memory") {
         // Wymiana pamięć → rejestr
-        const memoryValue = memory[address]; // Pobierz wartość z pamięci
-        const regValue = document.getElementById(targetId).value; // Pobierz wartość z rejestru
+        const memoryValue = memory[address];
+        const regValue = document.getElementById(targetId).value;
 
         // Zamiana wartości
-        memory[address] = parseInt(regValue, 16); // Zapisz wartość rejestru do pamięci
-        document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0"); // Zapisz wartość pamięci do rejestru
+        memory[address] = parseInt(regValue, 16);
+        document.getElementById(targetId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
 
-        // Poprawione logowanie
-        console.log(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memoryValue.toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
-        alert(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memoryValue.toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
+        // Logowanie po aktualizacji wartości
+        console.log(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memory[address].toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
+        alert(`XCHG Memory [${address}] ↔ ${targetId.toUpperCase()}: Memory=${memory[address].toString(16).toUpperCase()}, Reg=${document.getElementById(targetId).value}`);
     } else {
         // Wymiana rejestr → pamięć
-        const regValue = document.getElementById(sourceId).value; // Pobierz wartość z rejestru
-        const memoryValue = memory[address]; // Pobierz wartość z pamięci
+        const regValue = document.getElementById(sourceId).value;
+        const memoryValue = memory[address];
 
         // Zamiana wartości
-        memory[address] = parseInt(regValue, 16); // Zapisz wartość rejestru do pamięci
-        document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0"); // Zapisz wartość pamięci do rejestru
+        memory[address] = parseInt(regValue, 16);
+        document.getElementById(sourceId).value = memoryValue.toString(16).toUpperCase().padStart(4, "0");
 
-        // Poprawione logowanie
-        console.log(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${document.getElementById(sourceId).value}, Memory=${memoryValue.toString(16).toUpperCase()}`);
-        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${document.getElementById(sourceId).value}, Memory=${memoryValue.toString(16).toUpperCase()}`);
+        // Logowanie po aktualizacji wartości
+        console.log(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${document.getElementById(sourceId).value}, Memory=${memory[address].toString(16).toUpperCase()}`);
+        alert(`XCHG ${sourceId.toUpperCase()} ↔ Memory [${address}]: Reg=${document.getElementById(sourceId).value}, Memory=${memory[address].toString(16).toUpperCase()}`);
     }
 }
 
@@ -178,13 +178,16 @@ function calculateAddress() {
 
 // Przesyłanie wartości z rejestru do pamięci
 function moveToMemory() {
-    const register = document.getElementById("memory-register-ops").value;
-    const address = calculateAddress();
+    const register = document.getElementById("memory-register-ops").value; // Pobierz wybrany rejestr
+    const address = calculateAddress(); // Oblicz adres pamięci
     if (address === null) return;
 
-    const value = parseInt(document.getElementById(register).value || "0", 16);
-    memory[address] = value;
-    alert(`Zapisano wartość ${value.toString(16).toUpperCase()} z ${register.toUpperCase()} do pamięci pod adresem ${address.toString(16).toUpperCase()}`);
+    const value = parseInt(document.getElementById(register).value || "0", 16); // Pobierz wartość z rejestru
+    memory[address] = value; // Zapisanie wartości do pamięci
+
+    // Logowanie i alert
+    console.log(`MOV Register → Memory: Zapisano wartość ${value.toString(16).toUpperCase()} pod adresem ${address.toString(16).toUpperCase()}`);
+    alert(`MOV Register → Memory: Zapisano wartość ${value.toString(16).toUpperCase()} pod adresem ${address.toString(16).toUpperCase()}`);
 }
 
 // Przesyłanie wartości z pamięci do rejestru
@@ -205,26 +208,32 @@ function moveFromMemory() {
 
 // Funkcja PUSH - Dodanie wartości do stosu
 function pushToStack() {
-    const register = document.getElementById("memory-register-stack").value;
-    const value = parseInt(document.getElementById(register).value || "0", 16);
+    const register = document.getElementById("memory-register-stack").value; // Pobierz wybrany rejestr
+    const value = parseInt(document.getElementById(register).value || "0", 16); // Pobierz wartość z rejestru
 
     if (stack.length < stackSize) {
-        stack.push(value);
-        alert(`PUSH ${register.toUpperCase()} → Stack: ${value.toString(16).toUpperCase()}`);
+        stack.push(value); // Dodanie wartości na stos
+        console.log(`PUSH: Dodano wartość ${value.toString(16).toUpperCase()} do stosu.`);
+        alert(`PUSH: Dodano wartość ${value.toString(16).toUpperCase()} do stosu.`);
     } else {
         alert("Stos jest pełny!");
+        console.log("PUSH: Próba dodania wartości do pełnego stosu!");
     }
 }
 
 // Funkcja POP - Pobranie wartości ze stosu
 function popFromStack() {
-    const register = document.getElementById("memory-register-stack").value;
+    const register = document.getElementById("memory-register-stack").value; // Pobierz wybrany rejestr
 
     if (stack.length > 0) {
-        const value = stack.pop();
-        document.getElementById(register).value = value.toString(16).toUpperCase().padStart(4, "0");
-        alert(`POP Stack → ${register.toUpperCase()}: ${value.toString(16).toUpperCase()}`);
+        const value = stack.pop(); // Pobierz wartość ze stosu
+        document.getElementById(register).value = value.toString(16).toUpperCase().padStart(4, "0"); // Zapisz do rejestru
+
+        // Logi i alert
+        console.log(`POP: Zdjęto wartość ${value.toString(16).toUpperCase()} ze stosu i zapisano w rejestrze ${register.toUpperCase()}.`);
+        alert(`POP: Zdjęto wartość ${value.toString(16).toUpperCase()} ze stosu i zapisano w rejestrze ${register.toUpperCase()}.`);
     } else {
         alert("Stos jest pusty!");
+        console.log("POP: Próba zdjęcia wartości z pustego stosu!");
     }
 }
