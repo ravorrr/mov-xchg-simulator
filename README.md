@@ -55,7 +55,7 @@ This project is a simple simulator for CPU instructions **MOV**, **XCHG**, **PUS
 ## Screenshots
 
 ### Application Interface
-![Application Interface](https://i.imgur.com/2PKXpLY.png)
+![Application Interface](https://i.imgur.com/ub5rK9b.png)
 
 ## Credits
 
