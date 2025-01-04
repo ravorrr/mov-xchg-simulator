@@ -29,7 +29,7 @@ This project is a simple simulator for CPU instructions **MOV**, **XCHG**, **PUS
 
 ## Demo
 
-[Click here to try the simulator!](https://ravorrr.github.io/mov-xchg-simulator/)
+<a href="https://ravorrr.github.io/mov-xchg-simulator/" target="_blank">Click here to try the simulator!</a>
 
 ## Installation
 
