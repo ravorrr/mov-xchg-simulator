@@ -22,6 +22,27 @@ This project is a simple simulator for CPU instructions **MOV**, **XCHG**, **PUS
    - Random values can be assigned to registers.
    - Reset all registers to empty values.
 
+## Technologies
+
+- **HTML**, **CSS**, **JavaScript**: Frontend of the simulator.
+- **Custom Memory and Stack Simulation**: Backend logic for memory and stack handling implemented in JavaScript.
+
+## Demo
+
+[Click here to try the simulator!](https://ravorrr.github.io/mov-xchg-simulator/)
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ravorrr/mov-xchg-simulator.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd mov-xchg-simulator
+   ```
+3. Open `index.html` in any modern web browser.
+
 ## How to Use
 
 1. Open the `index.html` file in any modern browser.
@@ -31,10 +52,10 @@ This project is a simple simulator for CPU instructions **MOV**, **XCHG**, **PUS
 5. For **PUSH/POP** operations, select a register and use the **PUSH Register → Stack** or **POP Stack → Register** buttons.
 6. For memory addressing, use the **Memory Addressing** section to calculate memory addresses based on the chosen addressing mode and offset.
 
-## Future Extensions
+## Screenshots
 
-- Add additional CPU instructions like **ADD**, **SUB**, etc.
-- Enhance the user interface for better usability.
+### Application Interface
+![Application Interface](https://i.imgur.com/2PKXpLY.png)
 
 ## Credits
 
