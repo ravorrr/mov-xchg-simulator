@@ -31,6 +31,9 @@ This project is a simple simulator for CPU instructions **MOV**, **XCHG**, **PUS
 
 [Click here to try the simulator!](https://ravorrr.github.io/mov-xchg-simulator/)
 
+## Application Interface
+![Application Interface](https://i.imgur.com/ub5rK9b.png)
+
 ## Installation
 
 1. Clone the repository:
@@ -51,11 +54,6 @@ This project is a simple simulator for CPU instructions **MOV**, **XCHG**, **PUS
 4. Use the **MOV** and **XCHG** buttons to perform the respective operations.
 5. For **PUSH/POP** operations, select a register and use the **PUSH Register → Stack** or **POP Stack → Register** buttons.
 6. For memory addressing, use the **Memory Addressing** section to calculate memory addresses based on the chosen addressing mode and offset.
-
-## Screenshots
-
-### Application Interface
-![Application Interface](https://i.imgur.com/ub5rK9b.png)
 
 ## Credits
 
